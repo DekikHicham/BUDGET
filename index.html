@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Budget Financial Planner - Track income, expenses, set budgets, and achieve your financial goals">
+    <title>Budget Planner | Personal Finance Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body class="gate-active">
+    <!-- Access Gate Overlay -->
+    <div class="access-gate" id="access-gate">
+        <div class="gate-content">
+            <div class="gate-lock-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path class="lock-shackle" d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+            </div>
+            <h1 class="gate-title">BudgetPro</h1>
+            <p class="gate-subtitle">Enter your 6-character access code</p>
+            <form id="access-gate-form" class="gate-form">
+                <div class="gate-inputs">
+                    <input type="text" class="gate-digit-input" maxlength="1" autocomplete="off">
+                    <input type="text" class="gate-digit-input" maxlength="1" autocomplete="off">
+                    <input type="text" class="gate-digit-input" maxlength="1" autocomplete="off">
+                    <input type="text" class="gate-digit-input" maxlength="1" autocomplete="off">
+                    <input type="text" class="gate-digit-input" maxlength="1" autocomplete="off">
+                    <input type="text" class="gate-digit-input" maxlength="1" autocomplete="off">
+                </div>
+                <p class="gate-error" id="gate-error"></p>
+                <button type="submit" class="btn btn-primary gate-submit" id="gate-submit-btn" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                    Unlock
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                <span class="logo-text">BudgetPro</span>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-section="dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                    Dashboard
+                </button>
+                <button class="nav-btn" data-section="transactions">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M2 12h20" />
+                    </svg>
+                    Transactions
+                </button>
+                <button class="nav-btn" data-section="budgets">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12a9 9 0 1 1-9-9" />
+                        <path d="M21 3v9h-9" />
+                    </svg>
+                    Budgets
+                </button>
+                <button class="nav-btn" data-section="goals">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="6" />
+                        <circle cx="12" cy="12" r="2" />
+                    </svg>
+                    Goals
+                </button>
+                <button class="nav-btn" data-section="adkar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" />
+                        <circle cx="12" cy="12" r="4" />
+                    </svg>
+                    أذكار
+                </button>
+            </nav>
+            <div class="header-actions">
+                <button class="icon-btn" id="theme-toggle" title="Toggle dark mode">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5" />
+                        <path
+                            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                    </svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                </button>
+                <button class="btn btn-primary" id="quick-add-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14" />
+                    </svg>
+                    Add Transaction
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Dashboard Section -->
+        <section class="section section-dashboard active" id="dashboard">
+            <div class="section-header">
+                <h1>Financial Dashboard</h1>
+                <div class="period-selector">
+                    <button class="period-btn" data-period="week">Week</button>
+                    <button class="period-btn active" data-period="month">Month</button>
+                    <button class="period-btn" data-period="year">Year</button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card income">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Total Income</span>
+                        <span class="card-amount" id="total-income">$0.00</span>
+                        <span class="card-trend positive">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 15l-6-6-6 6" />
+                            </svg>
+                            <span id="income-trend">0%</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="summary-card expenses">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 3h18v18H3zM21 9H3M9 21V9" />
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Total Expenses</span>
+                        <span class="card-amount" id="total-expenses">$0.00</span>
+                        <span class="card-trend negative">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                            <span id="expenses-trend">0%</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="summary-card balance">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z" />
+                            <path d="M2 9v1c0 1.1.9 2 2 2h1" />
+                            <circle cx="15" cy="11" r="1" />
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Net Balance</span>
+                        <span class="card-amount" id="net-balance">$0.00</span>
+                        <span class="card-subtext" id="savings-rate">Savings rate: 0%</span>
+                    </div>
+                </div>
+                <div class="summary-card budget">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12a9 9 0 1 1-9-9" />
+                            <path d="M21 3v9h-9" />
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Budget Used</span>
+                        <span class="card-amount" id="budget-used">0%</span>
+                        <div class="mini-progress">
+                            <div class="mini-progress-bar" id="budget-progress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Spending by Category</h3>
+                        <button class="chart-menu-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="spending-chart"></canvas>
+                    </div>
+                    <div class="chart-legend" id="spending-legend"></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Monthly Trend</h3>
+                        <button class="chart-menu-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="trend-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="recent-transactions">
+                <div class="section-subheader">
+                    <h3>Recent Transactions</h3>
+                    <button class="btn btn-ghost" data-section="transactions">View All</button>
+                </div>
+                <div class="transactions-list" id="recent-transactions-list">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <p>No transactions yet</p>
+                        <span>Add your first transaction to get started</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transactions Section -->
+        <section class="section section-transactions" id="transactions">
+            <div class="section-header">
+                <h1>Transactions</h1>
+                <div class="search-filter">
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="M21 21l-4.35-4.35" />
+                        </svg>
+                        <input type="text" placeholder="Search transactions..." id="search-input">
+                    </div>
+                    <select class="filter-select" id="type-filter">
+                        <option value="all">All Types</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                    <select class="filter-select" id="category-filter">
+                        <option value="all">All Categories</option>
+                    </select>
+                    <button class="btn btn-outline" id="export-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                        </svg>
+                        Export
+                    </button>
+                </div>
+            </div>
+            <div class="transactions-table-wrapper">
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-table-body">
+                    </tbody>
+                </table>
+            </div>
+            <div class="transactions-empty" id="transactions-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <p>No transactions found</p>
+                <span>Add a transaction to start tracking your finances</span>
+            </div>
+        </section>
+
+        <!-- Budgets Section -->
+        <section class="section section-budgets" id="budgets">
+            <div class="section-header">
+                <h1>Budget Planning</h1>
+                <div class="budget-actions">
+                    <select class="filter-select" id="budget-template">
+                        <option value="custom">Custom Budget</option>
+                        <option value="50-30-20">50/30/20 Rule</option>
+                        <option value="zero-based">Zero-Based</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="budget-overview">
+                <div class="budget-total-card">
+                    <h3>Monthly Budget Overview</h3>
+                    <div class="budget-stats">
+                        <div class="stat">
+                            <span class="stat-label">Total Budget</span>
+                            <span class="stat-value" id="total-budget">$0.00</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Spent</span>
+                            <span class="stat-value" id="total-spent">$0.00</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Remaining</span>
+                            <span class="stat-value" id="total-remaining">$0.00</span>
+                        </div>
+                    </div>
+                    <div class="overall-progress">
+                        <div class="overall-progress-bar" id="overall-budget-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="budget-categories" id="budget-categories">
+                <!-- Budget categories will be rendered here -->
+            </div>
+        </section>
+
+        <!-- Goals Section -->
+        <section class="section section-goals" id="goals">
+            <div class="section-header">
+                <h1>Financial Goals</h1>
+                <button class="btn btn-primary" id="add-goal-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14" />
+                    </svg>
+                    Add Goal
+                </button>
+            </div>
+
+            <div class="goals-grid" id="goals-list">
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="6" />
+                        <circle cx="12" cy="12" r="2" />
+                    </svg>
+                    <p>No goals set yet</p>
+                    <span>Set your first financial goal to start tracking progress</span>
+                </div>
+            </div>
+
+            <div class="debt-section">
+                <div class="section-subheader">
+                    <h3>Debt Tracker</h3>
+                    <button class="btn btn-outline" id="add-debt-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                        Add Debt
+                    </button>
+                </div>
+                <div class="debts-list" id="debts-list">
+                    <div class="empty-state small">
+                        <p>No debts tracked</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Adkar Section -->
+        <section class="section section-adkar" id="adkar">
+            <div class="section-header">
+                <h1>🕌 الأذكار اليومية</h1>
+                <button class="btn btn-outline" id="reset-adkar-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 4v6h6M23 20v-6h-6" />
+                        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
+                    </svg>
+                    إعادة تعيين
+                </button>
+            </div>
+
+            <div class="adkar-container">
+                <!-- Morning Adkar -->
+                <div class="adkar-card">
+                    <div class="adkar-card-header morning">
+                        <span class="adkar-icon">🌅</span>
+                        <h2>أذكار الصباح</h2>
+                        <span class="adkar-time">بعد صلاة الفجر</span>
+                    </div>
+                    <div class="adkar-list" id="morning-adkar">
+                        <div class="adkar-item" data-id="m1">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">أَصْبَحْنَا وَأَصْبَحَ المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ، لَا
+                                    إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ</p>
+                                <span class="adkar-count">مرة واحدة</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="m2">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا،
+                                    وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ</p>
+                                <span class="adkar-count">مرة واحدة</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="m3">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</p>
+                                <span class="adkar-count">100 مرة</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="m4">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ
+                                    وَلَهُ الحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</p>
+                                <span class="adkar-count">10 مرات</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="m5">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ</p>
+                                <span class="adkar-count">100 مرة</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="m6">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا،
+                                    وَعَمَلًا مُتَقَبَّلًا</p>
+                                <span class="adkar-count">مرة واحدة</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="m7">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي
+                                    الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ</p>
+                                <span class="adkar-count">3 مرات</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="adkar-progress">
+                        <div class="adkar-progress-bar" id="morning-progress"></div>
+                    </div>
+                    <div class="adkar-stats">
+                        <span id="morning-completed">0</span> / <span id="morning-total">7</span> مكتمل
+                    </div>
+                </div>
+
+                <!-- Evening Adkar -->
+                <div class="adkar-card">
+                    <div class="adkar-card-header evening">
+                        <span class="adkar-icon">🌙</span>
+                        <h2>أذكار المساء</h2>
+                        <span class="adkar-time">بعد صلاة العصر</span>
+                    </div>
+                    <div class="adkar-list" id="evening-adkar">
+                        <div class="adkar-item" data-id="e1">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">أَمْسَيْنَا وَأَمْسَى المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ، لَا
+                                    إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ</p>
+                                <span class="adkar-count">مرة واحدة</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="e2">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا،
+                                    وَبِكَ نَمُوتُ، وَإِلَيْكَ المَصِيرُ</p>
+                                <span class="adkar-count">مرة واحدة</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="e3">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</p>
+                                <span class="adkar-count">100 مرة</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="e4">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ
+                                    وَلَهُ الحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</p>
+                                <span class="adkar-count">10 مرات</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="e5">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ</p>
+                                <span class="adkar-count">3 مرات</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="e6">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الهَمِّ وَالحَزَنِ، وَأَعُوذُ
+                                    بِكَ مِنَ العَجْزِ وَالكَسَلِ</p>
+                                <span class="adkar-count">مرة واحدة</span>
+                            </div>
+                        </div>
+                        <div class="adkar-item" data-id="e7">
+                            <label class="adkar-checkbox">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="adkar-content">
+                                <p class="adkar-text">بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي
+                                    الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ</p>
+                                <span class="adkar-count">3 مرات</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="adkar-progress">
+                        <div class="adkar-progress-bar" id="evening-progress"></div>
+                    </div>
+                    <div class="adkar-stats">
+                        <span id="evening-completed">0</span> / <span id="evening-total">7</span> مكتمل
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Transaction Modal -->
+    <div class="modal" id="transaction-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Transaction</h2>
+                <button class="close-btn" id="close-modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="transaction-form">
+                <input type="hidden" id="transaction-id">
+                <div class="form-group">
+                    <label for="transaction-type">Type</label>
+                    <div class="toggle-group">
+                        <button type="button" class="toggle-btn active" data-type="expense">Expense</button>
+                        <button type="button" class="toggle-btn" data-type="income">Income</button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="transaction-amount">Amount</label>
+                        <div class="input-with-icon">
+                            <span class="input-icon">$</span>
+                            <input type="number" id="transaction-amount" placeholder="0.00" step="0.01" min="0"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-date">Date</label>
+                        <input type="date" id="transaction-date" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-category">Category</label>
+                    <select id="transaction-category" required>
+                        <optgroup label="Expenses" id="expense-categories">
+                            <option value="housing">🏠 Housing</option>
+                            <option value="food">🍔 Food & Dining</option>
+                            <option value="transportation">🚗 Transportation</option>
+                            <option value="utilities">💡 Utilities</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="healthcare">🏥 Healthcare</option>
+                            <option value="shopping">🛍️ Shopping</option>
+                            <option value="personal">👤 Personal</option>
+                            <option value="education">📚 Education</option>
+                            <option value="other-expense">📦 Other</option>
+                        </optgroup>
+                        <optgroup label="Income" id="income-categories">
+                            <option value="salary">💼 Salary</option>
+                            <option value="freelance">💻 Freelance</option>
+                            <option value="investments">📈 Investments</option>
+                            <option value="rental">🏘️ Rental Income</option>
+                            <option value="gifts">🎁 Gifts</option>
+                            <option value="other-income">💰 Other Income</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-description">Description</label>
+                    <input type="text" id="transaction-description" placeholder="What was this for?" required>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-recurring">Recurring</label>
+                    <select id="transaction-recurring">
+                        <option value="none">One-time</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Bi-weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" id="cancel-transaction">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Goal Modal -->
+    <div class="modal" id="goal-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="goal-modal-title">Add Goal</h2>
+                <button class="close-btn" id="close-goal-modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="goal-form">
+                <input type="hidden" id="goal-id">
+                <div class="form-group">
+                    <label for="goal-name">Goal Name</label>
+                    <input type="text" id="goal-name" placeholder="e.g., Emergency Fund, Vacation" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="goal-target">Target Amount</label>
+                        <div class="input-with-icon">
+                            <span class="input-icon">$</span>
+                            <input type="number" id="goal-target" placeholder="10000" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-current">Current Amount</label>
+                        <div class="input-with-icon">
+                            <span class="input-icon">$</span>
+                            <input type="number" id="goal-current" placeholder="0" step="0.01" min="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="goal-deadline">Target Date</label>
+                    <input type="date" id="goal-deadline">
+                </div>
+                <div class="form-group">
+                    <label for="goal-icon">Icon</label>
+                    <div class="icon-picker" id="goal-icon-picker">
+                        <button type="button" class="icon-option active" data-icon="🎯">🎯</button>
+                        <button type="button" class="icon-option" data-icon="🏖️">🏖️</button>
+                        <button type="button" class="icon-option" data-icon="🚗">🚗</button>
+                        <button type="button" class="icon-option" data-icon="🏠">🏠</button>
+                        <button type="button" class="icon-option" data-icon="💍">💍</button>
+                        <button type="button" class="icon-option" data-icon="📚">📚</button>
+                        <button type="button" class="icon-option" data-icon="💼">💼</button>
+                        <button type="button" class="icon-option" data-icon="🎓">🎓</button>
+                    </div>
+                    <input type="hidden" id="goal-icon" value="🎯">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" id="cancel-goal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Goal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Debt Modal -->
+    <div class="modal" id="debt-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Debt</h2>
+                <button class="close-btn" id="close-debt-modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="debt-form">
+                <input type="hidden" id="debt-id">
+                <div class="form-group">
+                    <label for="debt-name">Debt Name</label>
+                    <input type="text" id="debt-name" placeholder="e.g., Credit Card, Student Loan" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="debt-principal">Principal Amount</label>
+                        <div class="input-with-icon">
+                            <span class="input-icon">$</span>
+                            <input type="number" id="debt-principal" placeholder="5000" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="debt-rate">Interest Rate (%)</label>
+                        <input type="number" id="debt-rate" placeholder="15" step="0.01" min="0" max="100">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="debt-payment">Monthly Payment</label>
+                    <div class="input-with-icon">
+                        <span class="input-icon">$</span>
+                        <input type="number" id="debt-payment" placeholder="200" step="0.01" min="0">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" id="cancel-debt">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Debt</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Export Modal -->
+    <div class="modal" id="export-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>Export Data</h2>
+                <button class="close-btn" id="close-export-modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="export-options">
+                <button class="export-option" id="export-csv">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <path d="M14 2v6h6M8 13h8M8 17h8M8 9h2" />
+                    </svg>
+                    <span>Download CSV</span>
+                    <small>Spreadsheet format</small>
+                </button>
+                <button class="export-option" id="export-print">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
+                        <rect x="6" y="14" width="12" height="8" />
+                    </svg>
+                    <span>Print Report</span>
+                    <small>PDF-ready layout</small>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/firebase.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/accessGate.js"></script>
+</body>
+
+</html>
