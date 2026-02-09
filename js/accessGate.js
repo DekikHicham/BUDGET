@@ -7,6 +7,7 @@ const AccessGate = {
     USER_CODES: {
         'admin': 'Adm1n0',     // Admin user
         'Hichem': '120305',     // User 1
+        'Othman': 'othman'
         // Add more users below:
         // 'username': 'CODE00',
     },
