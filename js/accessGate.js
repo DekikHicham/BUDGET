@@ -5,9 +5,17 @@ const AccessGate = {
     // User codes database - add/remove users here
     // Each user has a unique 6-character alphanumeric code (letters + numbers)
     USER_CODES: {
-        'admin': 'Adm1n0',   // Example: Admin user
-        'user1': 'Us3r01',   // Example: User 1
-        'user2': 'C0de2X',   // Example: User 2
+        'admin': 'Adm1n0',     // Admin user
+        'user1': 'Us3r01',     // User 1
+        'user2': 'C0de2X',     // User 2
+        'user3': 'Ux3R9Q',     // User 3
+        'user4': 'D3s1gn4',    // User 4
+        'user5': 'Cr8t0r5',    // User 5
+        'editor': 'Ed1t0R',    // Editor role
+        'moderator': 'M0d7r8', // Moderator role
+        'guest': 'Gu3sT0',     // Guest user
+        'tester': 'T3st99',    // Tester account
+
         // Add more users below:
         // 'username': 'CODE00',
     },
