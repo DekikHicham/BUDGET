@@ -1,10 +1,15 @@
 // ==========================================
-// Storage - Local + Cloud Sync
+// Storage - Local + Cloud Sync (User-Specific)
 // ==========================================
 
 const Storage = {
-    STORAGE_KEY: 'budgetPlannerData',
     VERSION: 1,
+
+    // Get storage key for current user
+    getStorageKey() {
+        const username = sessionStorage.getItem('budgetplanner_user');
+        return username ? `budgetPlannerData_${username.toLowerCase()}` : 'budgetPlannerData';
+    },
 
     // Main save function - saves to both local and cloud
     save() {
@@ -19,7 +24,7 @@ const Storage = {
         }
     },
 
-    // Save to localStorage only
+    // Save to localStorage for current user
     saveLocal() {
         try {
             const data = {
@@ -31,16 +36,16 @@ const Storage = {
                 settings: State.settings,
                 savedAt: new Date().toISOString()
             };
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+            localStorage.setItem(this.getStorageKey(), JSON.stringify(data));
         } catch (e) {
             console.error('Failed to save local data:', e);
         }
     },
 
-    // Load from localStorage
+    // Load from localStorage for current user
     load() {
         try {
-            const stored = localStorage.getItem(this.STORAGE_KEY);
+            const stored = localStorage.getItem(this.getStorageKey());
             if (stored) {
                 const data = JSON.parse(stored);
                 return data;
@@ -53,31 +58,34 @@ const Storage = {
 
     // Load from cloud and merge with local
     async loadWithSync(username) {
-        // First load local data
-        const localData = this.load();
-
-        // Try to load from cloud
+        // Try to load from cloud first
         if (typeof FirebaseSync !== 'undefined' && FirebaseSync.isActive()) {
             const cloudData = await FirebaseSync.load();
 
             if (cloudData) {
-                // Cloud data exists - use it (it's the source of truth)
+                // Cloud data exists - use it as source of truth
                 console.log('Using cloud data for user:', username);
+                // Also save to local for offline access
+                this.saveLocal();
                 return cloudData;
-            } else if (localData) {
-                // No cloud data but have local - upload local to cloud
-                console.log('No cloud data, uploading local data');
-                // Will be synced on next save
-                return localData;
             }
         }
 
-        return localData;
+        // No cloud data - load user's local data (if any)
+        const localData = this.load();
+        if (localData) {
+            console.log('Using local data for user:', username);
+            return localData;
+        }
+
+        // New user - return null (empty state)
+        console.log('New user, starting with empty data:', username);
+        return null;
     },
 
     clear() {
         try {
-            localStorage.removeItem(this.STORAGE_KEY);
+            localStorage.removeItem(this.getStorageKey());
             return true;
         } catch (e) {
             console.error('Failed to clear data:', e);
