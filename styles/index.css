@@ -2353,3 +2353,331 @@ body.gate-active .main {
     background: rgba(52, 211, 153, 0.1);
     border-color: rgba(52, 211, 153, 0.2);
 }
+
+/* ==========================================
+   Mobile Responsive Styles
+   ========================================== */
+
+/* Tablet breakpoint */
+@media (max-width: 1024px) {
+    .header-content {
+        padding: var(--space-md) var(--space-lg);
+    }
+
+    .main {
+        padding: var(--space-lg);
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile breakpoint */
+@media (max-width: 768px) {
+
+    /* Header - Stack vertically */
+    .header-content {
+        flex-wrap: wrap;
+        padding: var(--space-sm) var(--space-md);
+        gap: var(--space-sm);
+    }
+
+    .logo-text {
+        font-size: 1.25rem;
+    }
+
+    .logo-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    /* Navigation - Horizontal scroll or bottom nav */
+    .nav {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        padding: var(--space-xs) 0;
+        gap: var(--space-xs);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-btn {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    .nav-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Header Actions */
+    .header-actions {
+        gap: var(--space-sm);
+    }
+
+    .header-actions .btn {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.75rem;
+    }
+
+    .header-actions .btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Hide "Add Transaction" text on mobile */
+    #quick-add-btn span,
+    .header-actions .btn:not(.icon-btn) span:not(.sync-user) {
+        display: none;
+    }
+
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Sync indicator */
+    .sync-indicator {
+        padding: 2px var(--space-xs);
+        font-size: 0.65rem;
+    }
+
+    .sync-icon {
+        width: 12px;
+        height: 12px;
+    }
+
+    /* Main content */
+    .main {
+        padding: var(--space-md);
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+
+    .section-header h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Summary Cards - Single column */
+    .summary-cards {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+
+    .summary-card {
+        padding: var(--space-md);
+    }
+
+    .card-amount {
+        font-size: 1.5rem;
+    }
+
+    /* Charts */
+    .charts-grid {
+        gap: var(--space-md);
+    }
+
+    .chart-card {
+        padding: var(--space-md);
+    }
+
+    .chart-container {
+        height: 220px;
+    }
+
+    /* Transactions Table */
+    .transactions-table-wrapper {
+        margin: 0 calc(-1 * var(--space-md));
+        padding: 0 var(--space-md);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .transactions-table {
+        min-width: 600px;
+        font-size: 0.8rem;
+    }
+
+    .transactions-table th,
+    .transactions-table td {
+        padding: var(--space-sm);
+    }
+
+    /* Search & Filters */
+    .search-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box {
+        max-width: 100%;
+    }
+
+    .filter-select {
+        width: 100%;
+    }
+
+    /* Period selector */
+    .period-selector {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .period-btn {
+        flex: 1;
+        text-align: center;
+        font-size: 0.8rem;
+    }
+
+    /* Modals */
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        margin: var(--space-md);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    /* Goals grid */
+    .goals-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Budget categories */
+    .budget-categories {
+        grid-template-columns: 1fr;
+    }
+
+    /* Transaction items */
+    .transaction-item {
+        flex-wrap: wrap;
+    }
+
+    .transaction-amount {
+        width: 100%;
+        text-align: left;
+        margin-top: var(--space-xs);
+    }
+}
+
+/* Small phone breakpoint */
+@media (max-width: 400px) {
+    .header-content {
+        padding: var(--space-xs) var(--space-sm);
+    }
+
+    .logo-text {
+        font-size: 1rem;
+    }
+
+    .main {
+        padding: var(--space-sm);
+    }
+
+    .section-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .summary-card {
+        padding: var(--space-sm);
+    }
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .card-amount {
+        font-size: 1.25rem;
+    }
+
+    .btn {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.8rem;
+    }
+
+    /* Gate adjustments for small screens */
+    .gate-digit-input {
+        width: 40px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+
+    .gate-inputs {
+        gap: 4px;
+    }
+
+    .gate-title {
+        font-size: 1.75rem;
+    }
+
+    .gate-subtitle {
+        font-size: 0.875rem;
+    }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+
+    .btn,
+    .nav-btn,
+    .icon-btn,
+    .toggle-btn,
+    .period-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .gate-digit-input {
+        min-height: 50px;
+    }
+
+    /* Remove hover effects on touch devices */
+    .summary-card:hover,
+    .btn-primary:hover {
+        transform: none;
+    }
+}
+
+/* Landscape phone adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+    .access-gate {
+        overflow-y: auto;
+        padding: var(--space-md);
+    }
+
+    .gate-content {
+        padding: var(--space-md);
+    }
+
+    .gate-lock-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: var(--space-md);
+    }
+
+    .gate-title {
+        font-size: 1.5rem;
+    }
+}
